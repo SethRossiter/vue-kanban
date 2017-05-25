@@ -4,6 +4,8 @@
     <ul>
       <li v-for="board in boards"><router-link :to="'/boards/'+board._id">{{board.name}}</router-link> <span @click="removeBoard(board)">x</span></li>
     </ul>
+    
+    
   </div>
 </template>
 
@@ -27,7 +29,7 @@ export default {
     },
     removeBoard(board){
       this.$root.$data.store.actions.removeBoard(board)
-    }
+    },
   }
 }
 </script>

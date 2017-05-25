@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <error></error>
-    <router-view></router-view>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -9,6 +11,9 @@
 import Error from './components/Error'
 export default {
   name: 'app',
+  mounted(){
+    this.$root.$data.store.actions.getAuth()
+  },
   components:{
     Error
   }
@@ -16,12 +21,12 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body{
+  background-color: #0079bf;
+  color: #fff;
+  padding-top: 40px;
+}
+p,h1,h2,h3,h4,h5,h6,span,ul,li,div,a,a:hover{
+  color: #fff;
 }
 </style>

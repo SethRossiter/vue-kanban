@@ -1,10 +1,12 @@
 <template>
   <div> 
     Active Board: {{board}}
+   <List></List>
   </div>
 </template>
 
 <script>
+import List from './list'
 export default {
   name: 'board',
   mounted(){
@@ -14,6 +16,9 @@ export default {
     board(){
       return this.$root.$data.store.state.activeBoard
     }
+  },
+  components: {
+    List
   }
 }
 </script>
