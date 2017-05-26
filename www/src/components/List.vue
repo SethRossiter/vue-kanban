@@ -1,26 +1,24 @@
 <template>
     <div class="list">  
-    Active List: {{list}}
-    <button @click="createList">Add List</button>
-    <ul>
-      <li v-for="list in lists"><router-link :to="'/boards/:boardId/lists'+list._id">{{list.name}}</router-link> <span @click="removeList(list)">x</span></li>
-    </ul>
+    Active List: {{listData}}
     </div>
 </template>
 
 
 <script>
+    // buttons belong in template
+    // <button @click="removeLists">X</button>
+    // <button @click="createLists">Add new List</button>
 export default {
   name: 'list',
+  //props recieves data
+  props: ['list-data'],
   mounted(){
-    this.$root.$data.store.actions.getList(this.$route.params.id)
+    // this.$root.$data.store.actions.createLists(this.$route.params.id)
+    // this.$root.$data.store.actions.removeLists(this.$route.params.id)
   },
-  computed:{
-    board(){
-      return this.$root.$data.store.state.activeList
-    }
+ 
   }
-}
   
 </script>
 

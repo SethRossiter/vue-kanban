@@ -47,7 +47,7 @@ let io = require('socket.io')(server, {
 io.on('connection', function (socket) {
     socket.emit('CONNECTED', {
         socket: socket.id,
-        message: 'Welcome to the Jungle'
+        message: 'Super duper secret message stuff'
     })
 
     socket.on('update', (d) => {

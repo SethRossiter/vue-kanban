@@ -16,6 +16,7 @@ let auth = axios.create({
 let state = {
   boards: [{}],
   activeBoard: {},
+  activeLists: [],
   error: {},
   user: {}
 }
@@ -64,21 +65,21 @@ export default {
     //     })
     //     .catch(handleError)
     // },
-    getList(id) {
+    getLists(id) {
       api('/boards/' + id + '/lists/')
         .then(res => {
-          state.activeList = res.data.data
+          state.activeLists = res.data.data.lists
         })
         .catch(handleError)
     },
-    createList(list) {
+    createLists(list) {
       api.post('lists/', list)
         .then(res => {
           this.getLists()
         })
         .catch(handleError)
     },
-    removeList(list) {
+    removeLists(list) {
       api.delete('lists/' + list._id)
         .then(res => {
           this.getLists()
