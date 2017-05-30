@@ -1,15 +1,19 @@
 <template>
   <div> 
     Active Board: {{board}}
-     <ul>
      <li v-for="list in lists">
-      <list :list-data="list"></list>
+      <list :listData="list"></list>
     </li>
     </ul>
   </div>
 </template>
 
 <script>
+    //  <ul>
+    // // <button @click="createList">Add List</button>
+    // // <ul>
+    // //   <span @click="removeList(list)">x</span>
+    // // </ul>
 import List from './list'
 export default {
   name: 'board',

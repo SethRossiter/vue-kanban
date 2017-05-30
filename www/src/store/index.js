@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router'
+import Vue from 'vue'
 
 let api = axios.create({
   baseURL: 'http://localhost:3000/api/',
@@ -18,6 +19,7 @@ let state = {
   activeBoard: {},
   activeLists: [],
   error: {},
+  tasks: {},
   user: {}
 }
 
@@ -58,13 +60,6 @@ export default {
         })
         .catch(handleError)
     },
-    // getLists() {
-    //   api('userboards')
-    //     .then(res => {
-    //       state.lists = res.data.data
-    //     })
-    //     .catch(handleError)
-    // },
     getLists(id) {
       api('/boards/' + id + '/lists/')
         .then(res => {
@@ -86,6 +81,36 @@ export default {
         })
         .catch(handleError)
     },
+    getTasks(boardId, listId) {
+      api('boards/' + boardId + '/lists/' + listId + '/tasks')
+        .then(res => {
+          //Vue.set(state.tasks, listId, res.data.data.tasks)
+          state.tasks[listId] = res.data.data.tasks
+        })
+        .catch(handleError)
+    },
+    moveTasks(boardId, listId) {
+      api.put('boards/' + boardId + '/lists/' + listId + '/tasks')
+        .then(res => {
+          //Vue.set(state.tasks, listId, res.data.data.tasks)
+          state.tasks[listId] = res.data.data.tasks
+        })
+        .catch(handleError)
+    },
+    //     createBoard(board) {
+    //   api.post('boards/', board)
+    //     .then(res => {
+    //       this.getBoards()
+    //     })
+    //     .catch(handleError)
+    // },
+    // removeBoard(board) {
+    //   api.delete('boards/' + board._id)
+    //     .then(res => {
+    //       this.getBoards()
+    //     })
+    //     .catch(handleError)
+    // },
     login(user) {
       auth.post('login', user)
         .then(res => {
