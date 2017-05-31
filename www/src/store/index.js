@@ -89,11 +89,10 @@ export default {
         })
         .catch(handleError)
     },
-    moveTasks(boardId, listId) {
-      api.put('boards/' + boardId + '/lists/' + listId + '/tasks')
+    moveTask(task) {
+      api.put('tasks/'+ task._id, task)
         .then(res => {
-          //Vue.set(state.tasks, listId, res.data.data.tasks)
-          state.tasks[listId] = res.data.data.tasks
+          this.getTasks(task.boardId, task.listId)
         })
         .catch(handleError)
     },

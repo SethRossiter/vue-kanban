@@ -3,25 +3,20 @@
     Active Board: {{board}}
      <li v-for="list in lists">
       <list :listData="list"></list>
-    </li>
-    </ul>
+      </li>
   </div>
 </template>
 
 <script>
-    //  <ul>
-    // // <button @click="createList">Add List</button>
-    // // <ul>
-    // //   <span @click="removeList(list)">x</span>
-    // // </ul>
+    // <button @click="createLists">Add List</button>
+    // </li>
+    //   <router-link :to="'/boards/'+board._id+'/lists/'+list._id">{{list.name}}</router-link> <span @click="removeLists(list)">x</span></li>
 import List from './list'
 export default {
   name: 'board',
   mounted(){
     this.$root.$data.store.actions.getBoard(this.$route.params.id)
     this.$root.$data.store.actions.getLists(this.$route.params.id)
-    // this.$root.$data.store.actions.createLists(this.$route.params.id)
-    // this.$root.$data.store.actions.removeLists(this.$route.params.id)
   },
   computed:{
     board(){
@@ -29,7 +24,6 @@ export default {
     },
     lists(){
       return this.$root.$data.store.state.activeLists
-      //return this.$root.$data.store.getLists
     }
   },
   components: {

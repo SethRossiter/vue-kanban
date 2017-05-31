@@ -1,18 +1,20 @@
+
 <template>
-    <div class="task">  
+    <div class="task" >  
     Active List: {{taskData}}
     </div>
 </template>
 
 
 <script>
-
 export default {
   name: 'task',
   //props recieves data
   props: ['task-data'],
+  methods: {
+    
+  },
   mounted(){
-
   },
  
   }
@@ -21,5 +23,4 @@ export default {
 
 
 <style scoped>
-
 </style>

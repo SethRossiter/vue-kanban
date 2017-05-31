@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import io from 'socket.io-client'
 import store from './store'
+import Sortable from 'sortablejs'
 
 
 let socket = io('http://localhost:3000')
