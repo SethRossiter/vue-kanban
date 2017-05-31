@@ -20,6 +20,7 @@ let state = {
   activeLists: [],
   error: {},
   tasks: {},
+  comments: {},
   user: {}
 }
 
@@ -90,9 +91,32 @@ export default {
         .catch(handleError)
     },
     moveTask(task) {
-      api.put('tasks/'+ task._id, task)
+      api.put('tasks/' + task._id, task)
         .then(res => {
           this.getTasks(task.boardId, task.listId)
+        })
+        .catch(handleError)
+    },
+    createTask(task) {
+      api.post('task/', task)
+        .then(res => {
+          this.getTasks()
+        })
+        .catch(handleError)
+    },
+    removeTask(task) {
+      api.delete('task/' + task._id)
+        .then(res => {
+          this.getTasks()
+        })
+        .catch(handleError)
+    },
+    getComments(boardId, listId, taskId) {
+      Vue.set(state.comments, taskId, [])
+      api('boards/' + boardId + '/lists/' + listId + '/tasks/' + taskId + '/comments')
+        .then(res => {
+
+          state.comments[taskId] = res.data.data.comments
         })
         .catch(handleError)
     },
