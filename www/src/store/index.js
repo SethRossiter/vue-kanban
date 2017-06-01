@@ -1,6 +1,10 @@
 import axios from 'axios'
 import router from '../router'
 import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
 
 let api = axios.create({
   baseURL: 'http://localhost:3000/api/',
@@ -15,7 +19,7 @@ let auth = axios.create({
 
 // REGISTER ALL DATA HERE
 let state = {
-  boards: [{}],
+  boards: [],
   activeBoard: {},
   activeLists: [],
   error: {},
@@ -24,33 +28,43 @@ let state = {
   user: {}
 }
 
-let handleError = (err) => {
+let handleError = (state, err) => {
   state.error = err
 }
 
-export default {
+export default new Vuex.Store({
   // ALL DATA LIVES IN THE STATE
   state,
+
+  mutations:{
+    setBoards(state, boards){
+      state.boards = boards
+    },
+    setActiveBoard(state, activeBoard){
+      state.activeBoard = activeBoard
+    }
+  },
+
   // ACTIONS ARE RESPONSIBLE FOR MANAGING ALL ASYNC REQUESTS
   actions: {
-    getBoards() {
+    getBoards({commit, dispatch}) {
       api('userboards')
         .then(res => {
-          state.boards = res.data.data
+          commit('setBoards', res.data.data)
         })
         .catch(handleError)
     },
-    getBoard(id) {
+    getBoard({commit, dispatch}, id) {
       api('boards/' + id)
         .then(res => {
-          state.activeBoard = res.data.data
+          commit('setActiveBoard', res.data.data)
         })
         .catch(handleError)
     },
-    createBoard(board) {
+    createBoard({commit, dispatch}, board) {
       api.post('boards/', board)
         .then(res => {
-          this.getBoards()
+          dispatch('getBoards')
         })
         .catch(handleError)
     },
@@ -160,6 +174,7 @@ export default {
           if (!res.data.data) {
             return router.push('/login')
           }
+          debugger
           state.user = res.data.data
           router.push('/boards')
         }).catch(err => {
@@ -170,4 +185,4 @@ export default {
       state.error = {}
     }
   }
-}
+})
