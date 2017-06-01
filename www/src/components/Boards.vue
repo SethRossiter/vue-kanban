@@ -1,5 +1,5 @@
 <template>
-  <div> 
+  <div class="well"> 
     <button @click="createBoard">Add Board</button>
     <ul>
       <li v-for="board in boards"><router-link :to="'/boards/'+board._id">{{board.name}}</router-link> <span @click="removeBoard(board)">x</span></li>
@@ -35,5 +35,20 @@ export default {
 </script>
 
 <style scoped>
+ul li a{
+  color: black;
+}
+
+ul li{
+  color: black;
+}
+
+button{
+  color: black;
+}
+
+span{
+  color: red;
+}
 
 </style>

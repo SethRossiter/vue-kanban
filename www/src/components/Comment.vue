@@ -1,7 +1,9 @@
 <template>
+<div class="well well-sm">
     <div class="comment" >  
     {{commentData}}
     </div>
+  </div>
 </template>
 
 
@@ -22,4 +24,7 @@ export default {
 
 
 <style scoped>
+.well{
+  background-color: green;
+}
 </style>

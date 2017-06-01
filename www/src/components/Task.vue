@@ -1,12 +1,16 @@
 <template>
+<div class="well well-sm">
     <div class="task">  
     {{taskData}}
+    <span @click="removeTasks(task)">x</span>
+    <button @click="createTasks">Add Task</button>
     <ul>
      <li v-for="comment in comments">
       <comment :commentData="comment"></comment>
     </li>
     </ul>
     </div>
+  </div>
 </template>
 
 
@@ -15,26 +19,26 @@ import Comment from './comment'
 export default {
   name: 'task',
   //props recieves data
-  props: ['task-data'],
+  props: ['taskData'],
  mounted(){
-    this.$root.$data.store.actions.getComments(this.taskData.boardId,this.taskData.listId, this.taskData._id)
+    this.$store.dispatch('getComments', this.taskData)
   },  
   computed: {
     comments(){
-      var comments = this.$root.$data.store.state.comments
+      var comments = this.$store.state.comments
       return comments[this.taskData._id]
     }
   },
   methods:{
-  createTasks(){
-    this.$root.$data.store.actions.createTasks({
-      name: 'Testing task creation',
-      description: 'task task task'
+  createComments(){
+    this.$store.dispatch('createComments', {
+      name: 'Testing comments creation',
+      description: 'comments comments comments'
     })
   },
-  removeTasks(task){
-    this.$root.$data.store.actions.removeTasks(task)
-  },
+  removeComments(comments){
+    this.$store.dispatch('removeComments', comments)
+  }
   },
 
   components:{
@@ -47,4 +51,8 @@ export default {
 
 
 <style scoped>
+.well{
+  background-color: purple;
+}
+
 </style>

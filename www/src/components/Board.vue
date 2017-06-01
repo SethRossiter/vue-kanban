@@ -1,30 +1,43 @@
 <template>
-  <div> 
+<div class="well">
     Active Board: {{board}}
+  <div class="well"> 
+      <span @click="removeLists(list)">x</span>
+    <button @click="createLists">Add List</button>
      <li v-for="list in lists">
       <list :listData="list"></list>
       </li>
   </div>
+</div>
 </template>
 
 <script>
-    // <button @click="createLists">Add List</button>
-    // </li>
-    //   <router-link :to="'/boards/'+board._id+'/lists/'+list._id">{{list.name}}</router-link> <span @click="removeLists(list)">x</span></li>
 import List from './list'
 export default {
-  name: 'board',
+  name: 'boards',
   mounted(){
-    this.$root.$data.store.actions.getBoard(this.$route.params.id)
-    this.$root.$data.store.actions.getLists(this.$route.params.id)
+    this.$store.dispatch('getBoard', this.$route.params.id)
+    this.$store.dispatch('getLists', this.$route.params.id)
   },
   computed:{
     board(){
-      return this.$root.$data.store.state.activeBoard
+      return this.$store.state.activeBoard
+
     },
     lists(){
-      return this.$root.$data.store.state.activeLists
+      return this.$store.state.activeLists
     }
+  },
+  methods:{
+        createLists(){
+      this.$store.dispatch('createLists', {
+        name: 'Testing list creation',
+        description: 'blarg'
+      })
+    },
+    removeLists(list){
+      this.$store.dispatch('removeLists', list)
+  }
   },
   components: {
     List
@@ -33,5 +46,12 @@ export default {
 </script>
 
 <style scoped>
+.well{
+ color: black;
+}
+
+span{
+  color: red;
+}
 
 </style>

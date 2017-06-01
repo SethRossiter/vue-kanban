@@ -21,10 +21,18 @@ let auth = axios.create({
 let state = {
   boards: [],
   activeBoard: {},
-  activeLists: [],
-  error: {},
+  activeList: [],
+  createLists: {},
+  removeLists: {},
+  removeBoard: {},
   tasks: {},
+  createTasks: {},
+  removeTasks: {},
+  moveTasks: {},
   comments: {},
+  createComments: {},
+  removeComments: {},
+  error: {},
   user: {}
 }
 
@@ -36,126 +44,161 @@ export default new Vuex.Store({
   // ALL DATA LIVES IN THE STATE
   state,
 
-  mutations:{
-    setBoards(state, boards){
+  mutations: {
+    setBoards(state, boards) {
       state.boards = boards
     },
-    setActiveBoard(state, activeBoard){
+    setActiveBoard(state, activeBoard) {
       state.activeBoard = activeBoard
+    },
+    removeBoard(state, removeBoard) {
+      state.removeBoard = removeBoard
+    },
+    activeList(state, activeList) {
+      state.activeLists = activeList.lists
+    },
+    removeLists(state, removeLists) {
+      state.removeLists = removeLists
+    },
+    createLists(state, createLists) {
+      state.createLists = createLists
+    },
+    createTasks(state, createTasks) {
+      state.createTasks = createTasks
+    },
+    removeTasks(state, removeTasks) {
+      state.removeTasks = removeTasks
+    },
+    moveTasks(state, moveTasks) {
+      state.moveTasks = moveTasks
+    },
+    createComments(state, createComments) {
+      state.createComments = createComments
+    },
+    removeComments(state, removeComments) {
+      state.removeComments = removeComments
+    },
+    user(state, user){
+      state.user = user
     }
   },
 
   // ACTIONS ARE RESPONSIBLE FOR MANAGING ALL ASYNC REQUESTS
   actions: {
-    getBoards({commit, dispatch}) {
+    getBoards({ commit, dispatch }) {
       api('userboards')
         .then(res => {
           commit('setBoards', res.data.data)
         })
         .catch(handleError)
     },
-    getBoard({commit, dispatch}, id) {
+    getBoard({ commit, dispatch }, id) {
       api('boards/' + id)
         .then(res => {
           commit('setActiveBoard', res.data.data)
         })
         .catch(handleError)
     },
-    createBoard({commit, dispatch}, board) {
+    createBoard({ commit, dispatch }, board) {
       api.post('boards/', board)
         .then(res => {
           dispatch('getBoards')
         })
         .catch(handleError)
     },
-    removeBoard(board) {
+    removeBoard({ commit, dispatch }, board) {
       api.delete('boards/' + board._id)
         .then(res => {
-          this.getBoards()
+          dispatch('removeBoard')
         })
         .catch(handleError)
     },
-    getLists(id) {
+    getLists({ commit, dispatch }, id) {
       api('/boards/' + id + '/lists/')
         .then(res => {
-          state.activeLists = res.data.data.lists
+          debugger
+          commit('activeList', res.data.data)
         })
         .catch(handleError)
     },
-    createLists(list) {
+    createLists({ commit, dispatch }, list) {
       api.post('lists/', list)
         .then(res => {
-          this.getLists()
+          dispatch('getLists')
         })
         .catch(handleError)
     },
-    removeLists(list) {
+    removeLists({ commit, dispatch }, list) {
       api.delete('lists/' + list._id)
         .then(res => {
-          this.getLists()
+          dispatch('getLists')
         })
         .catch(handleError)
     },
-    getTasks(boardId, listId) {
-      api('boards/' + boardId + '/lists/' + listId + '/tasks')
+    getTasks({ commit, dispatch }, list) {
+      api('boards/' + list.boardId + '/lists/' + list._id + '/tasks')
         .then(res => {
-          //Vue.set(state.tasks, listId, res.data.data.tasks)
-          state.tasks[listId] = res.data.data.tasks
+          dispatch('getTasks', res.data.data)
         })
         .catch(handleError)
     },
-    moveTask(task) {
+    moveTasks({ commit, dispatch }, task) {
       api.put('tasks/' + task._id, task)
         .then(res => {
-          this.getTasks(task.boardId, task.listId)
+          dispatch('getTasks', task.boardId, task.listId)
         })
         .catch(handleError)
     },
-    createTask(task) {
-      api.post('task/', task)
+    createTasks({ commit, dispatch }, task) {
+      api.post('task/', task._id, task)
         .then(res => {
-          this.getTasks()
+          dispatch('getTasks', task.boardId, task.listId)
         })
         .catch(handleError)
     },
-    removeTask(task) {
-      api.delete('task/' + task._id)
+    removeTasks({ commit, dispatch }, task) {
+      api.delete('task/' + task._id, task)
         .then(res => {
-          this.getTasks()
+          dispatch('getTasks', task._id, task.listId)
         })
         .catch(handleError)
     },
-    getComments(boardId, listId, taskId) {
-      Vue.set(state.comments, taskId, [])
-      api('boards/' + boardId + '/lists/' + listId + '/tasks/' + taskId + '/comments')
+    getComments({ commit, dispatch }, task) {
+      //Vue.set(state.comments, taskId, [])
+      api('boards/' + task.boardId + '/lists/' + task.listId + '/tasks/' + task._id + '/comments')
         .then(res => {
-
-          state.comments[taskId] = res.data.data.comments
+          dispatch('getComments', res.data.data)
+          //state.comments[taskId] = res.data.data.comments
         })
         .catch(handleError)
     },
-    //     createBoard(board) {
-    //   api.post('boards/', board)
-    //     .then(res => {
-    //       this.getBoards()
-    //     })
-    //     .catch(handleError)
-    // },
-    // removeBoard(board) {
-    //   api.delete('boards/' + board._id)
-    //     .then(res => {
-    //       this.getBoards()
-    //     })
-    //     .catch(handleError)
-    // },
-    login(user) {
+    removeComments({ commit, dispatch }, comment) {
+      api.delete('comment/' + comment._id, comment)
+        .then(res => {
+          dispatch('getComments', comment._id, comment.taskId)
+        })
+        .catch(handleError)
+    },
+    createComments({ commit, dispatch }, comment) {
+      api.post('comment/', comment._id, comment)
+        .then(res => {
+          dispatch('getTasks', comment.boardId, comment.listId, comment.taskId)
+        })
+        .catch(handleError)
+    },
+    login({ commit, dispatch }, user) {
       auth.post('login', user)
         .then(res => {
           console.log(res)
+          if (res.data.error) {
+            return handleError(res.data.error)
+          }
+          commit('user', res.data.data)
+          router.push('/boards')
         })
         .catch(handleError)
     },
-    register(user) {
+    register({ commit, dispatch }, user) {
       auth.post('register', user)
         .then(res => {
           console.log(res)
@@ -163,7 +206,7 @@ export default new Vuex.Store({
             return handleError(res.data.error)
           }
           //LETS REDIRECT THE PAGE
-          state.user = res.data
+          state.user = res.data//commit
           router.push('/boards')
         })
         .catch(handleError)
@@ -174,7 +217,6 @@ export default new Vuex.Store({
           if (!res.data.data) {
             return router.push('/login')
           }
-          debugger
           state.user = res.data.data
           router.push('/boards')
         }).catch(err => {

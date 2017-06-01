@@ -2,7 +2,7 @@
     <div class="login">
         <div class="form-group">
         <form @submit.prevent="login">
-            <input type="text" v-model="user.name" required placeholder="user name">
+            <input type="text" v-model="user.email" required placeholder="user name">
             <input type="password" v-model="user.password" require placeholder="password">
             <button type="submit">login</button>
         </form>
@@ -23,7 +23,7 @@ export default {
     computed:{},
     methods:{
         login(){
-            this.$root.store.actions.login(this.user)
+            this.$store.dispatch('login', this.user)
         }
     },
     components:{}
@@ -32,5 +32,8 @@ export default {
 
 
 <style scope>
+form{
+    color: black;
+}
 
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="list" droppable="true" v-on:drop.capture="addTasks" ondragover="event.preventDefault()">
+<div class="well well-sm">
+  <div class="list" droppable="true" v-on:drop.capture="createTasks" ondragover="event.preventDefault()">
     Active List: {{listData}}
     <div v-for="(task, i) in tasks" :key="i" :id="i" class="tasks" draggable="true" v-on:dragstart.capture="moving">
       <task :taskData="task"></task>
@@ -7,6 +8,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 
@@ -16,13 +18,14 @@
   export default {
     name: 'list',
     //props recieves data
-    props: ['list-data'],
+    props: ['listData'],
     mounted() {
-      this.$root.$data.store.actions.getTasks(this.listData.boardId, this.listData._id)
+
+      this.$store.dispatch('getTasks', this.listData)
         },
     computed: {
       tasks() {
-        var tasks = this.$root.$data.store.state.tasks
+        var tasks = this.$store.state.tasks
         if (tasks) {
           return tasks[this.listData._id]
         }
@@ -33,33 +36,21 @@
       getDets() {
         console.log(this.tasks.description)
       },
-      addTasks(event) {
+      createTasks(event) {
         var task = JSON.parse(event.dataTransfer.getData('text/javascript'))
         task.listId = this.listData._id
-        this.$root.$data.store.actions.moveTask(task)
-
-        //this.$http.put('/tasks/' + id, id)
+        this.$store.dispatch('moveTask', task)
       },
       moving(event) {
-
         console.log(event.target, event.target.id)
         var task = this.tasks[event.target.id]
         event.dataTransfer.setData('text/javascript', JSON.stringify(task))
         console.log('We are moving')
       },
-      createLists() {
-        this.$root.$data.store.actions.createLists({
-          name: 'Testing list creation',
-          description: 'list list list'
-        })
-      },
-      removeLists(list) {
-        this.$root.$data.store.actions.removeLists(list)
-      },
       moveTasks() {
         let i = this.tasks.indexOf(this.tasks)
         this.tasks.splice(i, 1)
-        this.$root.$data.store.actions.moveTasks(tasks)
+        this.$store.dispatch('moveTasks', tasks)
       }
     },
     components: {
@@ -73,5 +64,8 @@
 
 
 <style scoped>
+.well{
+  background-color: orange;
+}
 
 </style>
