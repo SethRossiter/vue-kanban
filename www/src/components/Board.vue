@@ -1,6 +1,6 @@
 <template>
 <div class="well">
-    Active Board: {{board}}
+    Active Board: {{board.name}}
   <div class="well"> 
       <span @click="removeLists(list)">x</span>
     <button @click="createLists">Add List</button>
@@ -22,7 +22,6 @@ export default {
   computed:{
     board(){
       return this.$store.state.activeBoard
-
     },
     lists(){
       return this.$store.state.activeLists
@@ -49,9 +48,7 @@ export default {
 .well{
  color: black;
 }
-
 span{
   color: red;
 }
-
 </style>

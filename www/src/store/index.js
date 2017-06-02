@@ -21,11 +21,11 @@ let auth = axios.create({
 let state = {
   boards: [],
   activeBoard: {},
-  activeList: [],
+  activeLists: [],
   createLists: {},
   removeLists: {},
   removeBoard: {},
-  tasks: {},
+  activeTasks: {},
   createTasks: {},
   removeTasks: {},
   moveTasks: {},
@@ -51,32 +51,14 @@ export default new Vuex.Store({
     setActiveBoard(state, activeBoard) {
       state.activeBoard = activeBoard
     },
-    removeBoard(state, removeBoard) {
-      state.removeBoard = removeBoard
-    },
     activeList(state, activeList) {
       state.activeLists = activeList.lists
     },
-    removeLists(state, removeLists) {
-      state.removeLists = removeLists
+    activeTasks(state, activeTasks){
+      state.activeTasks[activeTasks._id] = activeTasks.tasks
     },
-    createLists(state, createLists) {
-      state.createLists = createLists
-    },
-    createTasks(state, createTasks) {
-      state.createTasks = createTasks
-    },
-    removeTasks(state, removeTasks) {
-      state.removeTasks = removeTasks
-    },
-    moveTasks(state, moveTasks) {
-      state.moveTasks = moveTasks
-    },
-    createComments(state, createComments) {
-      state.createComments = createComments
-    },
-    removeComments(state, removeComments) {
-      state.removeComments = removeComments
+    activeComments(state, activeComments){
+      state.activeComments[activeComments._id] = activeComments.comments
     },
     user(state, user){
       state.user = user
@@ -116,7 +98,6 @@ export default new Vuex.Store({
     getLists({ commit, dispatch }, id) {
       api('/boards/' + id + '/lists/')
         .then(res => {
-          debugger
           commit('activeList', res.data.data)
         })
         .catch(handleError)
@@ -138,7 +119,7 @@ export default new Vuex.Store({
     getTasks({ commit, dispatch }, list) {
       api('boards/' + list.boardId + '/lists/' + list._id + '/tasks')
         .then(res => {
-          dispatch('getTasks', res.data.data)
+          commit('activeTasks', res.data.data)
         })
         .catch(handleError)
     },
@@ -164,11 +145,9 @@ export default new Vuex.Store({
         .catch(handleError)
     },
     getComments({ commit, dispatch }, task) {
-      //Vue.set(state.comments, taskId, [])
       api('boards/' + task.boardId + '/lists/' + task.listId + '/tasks/' + task._id + '/comments')
         .then(res => {
-          dispatch('getComments', res.data.data)
-          //state.comments[taskId] = res.data.data.comments
+          commit('activeComments', res.data.data)
         })
         .catch(handleError)
     },

@@ -1,7 +1,7 @@
 <template>
 <div class="well well-sm">
   <div class="list" droppable="true" v-on:drop.capture="createTasks" ondragover="event.preventDefault()">
-    Active List: {{listData}}
+    Active List: {{listData.name}}  ---- {{listData.description}} ---- {{listData._id}}
     <div v-for="(task, i) in tasks" :key="i" :id="i" class="tasks" draggable="true" v-on:dragstart.capture="moving">
       <task :taskData="task"></task>
       <div @click="getDets" v-on:dragend="moveTasks">
@@ -20,17 +20,12 @@
     //props recieves data
     props: ['listData'],
     mounted() {
-
       this.$store.dispatch('getTasks', this.listData)
         },
     computed: {
       tasks() {
-        var tasks = this.$store.state.tasks
-        if (tasks) {
-          return tasks[this.listData._id]
-        }
-        return {}
-      }
+       return this.$store.state.activeTasks[this.listData._id]
+    }
     },
     methods: {
       getDets() {
@@ -57,9 +52,7 @@
       Task,
       draggable
     },
-
   }
-
 </script>
 
 
@@ -67,5 +60,4 @@
 .well{
   background-color: orange;
 }
-
 </style>
