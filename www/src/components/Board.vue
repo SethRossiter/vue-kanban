@@ -1,9 +1,13 @@
 <template>
 <div class="well">
     Active Board: {{board.name}}
+    <h5><button type="button"><router-link :to="'/boards/'">go back to boards list...</router-link></button></h5>
+      <form @submit.prevent="createLists(list)">
+        <input type="text" v-model="name" required placeholder="Create List">
+        <button type="submit">+</button>
+      <span @submit.prevent="removeLists(list)">x</span>
+      </form>
   <div class="well"> 
-      <span @click="removeLists(list)">x</span>
-    <button @click="createLists">Add List</button>
      <li v-for="list in lists">
       <list :listData="list"></list>
       </li>
@@ -15,6 +19,11 @@
 import List from './list'
 export default {
   name: 'boards',
+    data(){
+      return {
+        name: ''
+      }
+    },
   mounted(){
     this.$store.dispatch('getBoard', this.$route.params.id)
     this.$store.dispatch('getLists', this.$route.params.id)
@@ -28,12 +37,14 @@ export default {
     }
   },
   methods:{
-        createLists(){
-      this.$store.dispatch('createLists', {
-        name: 'Testing list creation',
-        description: 'blarg'
-      })
-    },
+      createLists() {
+        this.$store.dispatch('createLists',{
+          name: this.name,
+          description: this.description,
+          boardId: this.$route.params.id
+        })
+        this.name = ''
+      },
     removeLists(list){
       this.$store.dispatch('removeLists', list)
   }

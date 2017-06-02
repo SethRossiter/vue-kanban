@@ -1,9 +1,12 @@
 <template>
 <div class="well well-sm">
     <div class="task">  
-    {{taskData}}
-    <span @click="removeTasks(task)">x</span>
-    <button @click="createTasks">Add Task</button>
+    {{taskData.name}}
+    <form @submit.prevent="createComments(comment)">
+      <input type="text" v-model="name" required placeholder="Create Comment">
+      <button type="submit">+</button>
+        <span @submit.prevent="removeComments(comment)">x</span>
+    </form>
     <ul>
      <li v-for="comment in comments">
       <comment :commentData="comment"></comment>
@@ -18,6 +21,11 @@
 import Comment from './comment'
 export default {
   name: 'task',
+  data(){
+      return {
+        name: ''
+      }
+    },
   //props recieves data
   props: ['taskData'],
  mounted(){
@@ -31,19 +39,20 @@ export default {
   methods:{
   createComments(){
     this.$store.dispatch('createComments', {
-      name: 'Testing comments creation',
-      description: 'comments comments comments'
+      name: this.name,
+      description: this.description,
+      taskId: this.$route.params.id,
+      listId: this.$route.params.id,
+      boardId: this.$route.params.id
     })
   },
   removeComments(comments){
     this.$store.dispatch('removeComments', comments)
   }
   },
-
   components:{
     Comment
   }
-
 }
   
 </script>
@@ -53,5 +62,4 @@ export default {
 .well{
   background-color: purple;
 }
-
 </style>

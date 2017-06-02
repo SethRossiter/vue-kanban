@@ -51,8 +51,8 @@ export default new Vuex.Store({
     setActiveBoard(state, activeBoard) {
       state.activeBoard = activeBoard
     },
-    activeList(state, activeList) {
-      state.activeLists = activeList.lists
+    activeLists(state, activeLists) {
+      state.activeLists = activeLists.lists
     },
     activeTasks(state, activeTasks){
       state.activeTasks[activeTasks._id] = activeTasks.tasks
@@ -98,14 +98,14 @@ export default new Vuex.Store({
     getLists({ commit, dispatch }, id) {
       api('/boards/' + id + '/lists/')
         .then(res => {
-          commit('activeList', res.data.data)
+          commit('activeLists', res.data.data)
         })
         .catch(handleError)
     },
     createLists({ commit, dispatch }, list) {
       api.post('lists/', list)
         .then(res => {
-          dispatch('getLists')
+          dispatch('getLists', list.boardId)
         })
         .catch(handleError)
     },
@@ -131,6 +131,13 @@ export default new Vuex.Store({
         .catch(handleError)
     },
     createTasks({ commit, dispatch }, task) {
+      api.post('task/', task._id, task)
+        .then(res => {
+          dispatch('getTasks', task.boardId, task.listId)
+        })
+        .catch(handleError)
+    },
+    createNewTasks({ commit, dispatch }, task) {
       api.post('task/', task._id, task)
         .then(res => {
           dispatch('getTasks', task.boardId, task.listId)

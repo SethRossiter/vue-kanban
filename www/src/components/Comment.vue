@@ -1,7 +1,7 @@
 <template>
 <div class="well well-sm">
     <div class="comment" >  
-    {{commentData}}
+    {{commentData.name}}
     </div>
   </div>
 </template>

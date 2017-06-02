@@ -38,17 +38,13 @@ export default {
 ul li a{
   color: black;
 }
-
 ul li{
   color: black;
 }
-
 button{
   color: black;
 }
-
 span{
   color: red;
 }
-
 </style>
