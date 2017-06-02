@@ -29,7 +29,7 @@ let state = {
   createTasks: {},
   removeTasks: {},
   moveTasks: {},
-  comments: {},
+  activeComments: {},
   createComments: {},
   removeComments: {},
   error: {},

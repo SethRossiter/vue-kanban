@@ -25,8 +25,7 @@ export default {
   },  
   computed: {
     comments(){
-      var comments = this.$store.state.comments
-      return comments[this.taskData._id]
+      return this.$store.state.activeComments[this.taskData._id]
     }
   },
   methods:{
